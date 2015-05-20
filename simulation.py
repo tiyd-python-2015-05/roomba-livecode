@@ -36,6 +36,10 @@ class Roomba:
     def position(self):
         return (self.x, self.y)
 
+    @position.setter
+    def position(self, pos):
+        self.x, self.y = pos
+
     @property
     def next_position(self):
         x_move = sin(radians(self.angle)) * self.speed
@@ -45,6 +49,12 @@ class Roomba:
     def collide(self):
         self.angle += 45
         self.angle %= 360
+
+    def move(self):
+        self.position = self.next_position
+
+    def place(self, x, y):
+        self.position = (x, y)
 
 
 class Simulation:

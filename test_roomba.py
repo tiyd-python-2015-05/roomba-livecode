@@ -24,3 +24,13 @@ def test_roomba_should_turn_45_degrees_on_collision():
 
     roomba.collide()
     assert roomba.angle == 10
+
+def test_roomba_can_move():
+    roomba = Roomba(x=10, y=10, angle=45)
+    roomba.move()
+    assert roomba.position == (10 + math.sqrt(0.5), 10 + math.sqrt(0.5))
+
+def test_roomba_can_be_placed():
+    roomba = Roomba()
+    roomba.place(4, 5)
+    assert roomba.position == (4, 5)
