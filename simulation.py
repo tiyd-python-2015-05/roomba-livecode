@@ -19,7 +19,7 @@ class Room:
 
     def is_clean(self, x, y):
         """See if square has been cleaned."""
-        return (x, y) in self.cleaned_squares
+        return (int(x), int(y)) in self.cleaned_squares
 
     def in_bounds(self, x, y):
         return 0 <= x < self.width and 0 <= y < self.length
@@ -61,3 +61,33 @@ class Simulation:
     def __init__(self, room, roombas):
         self.room = room
         self.roombas = roombas
+        self.steps = 0
+
+    def step(self):
+        """
+        - check next roomba positions for collision
+        - inform colliding roombas of collision
+        - move all roombas
+        - inform room of cleaned spaces
+        - record clean times at 50, 90, 100%
+        """
+        for roomba in self.roombas:
+            i = 0
+            while not self.room.in_bounds(*roomba.next_position):
+                roomba.collide()
+                i += 1
+                if i > 360:
+                    raise Exception("Stuck roomba!")
+
+            roomba.move()
+            self.room.clean(*roomba.position)
+        self.steps += 1
+
+    def run(self):
+        results = {0.5: None, 0.9: None, 1.0: None}
+        while self.room.clean_percentage() < 1.0 and self.steps < self.room.area * 100:
+            self.step()
+            for percentage in results.keys():
+                if self.room.clean_percentage() >= percentage and results[percentage] is None:
+                    results[percentage] = self.steps
+        return results
