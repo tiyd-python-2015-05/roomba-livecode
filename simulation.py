@@ -1,4 +1,5 @@
-__author__ = 'clinton'
+from math import sin, cos, radians
+
 class Room:
     def __init__(self, length, width):
         self.length = length
@@ -23,6 +24,7 @@ class Room:
     def in_bounds(self, x, y):
         return 0 <= x < self.width and 0 <= y < self.length
 
+
 class Roomba:
     def __init__(self, x=0, y=0, angle=0):
         self.x = x
@@ -43,3 +45,9 @@ class Roomba:
     def collide(self):
         self.angle += 45
         self.angle %= 360
+
+
+class Simulation:
+    def __init__(self, room, roombas):
+        self.room = room
+        self.roombas = roombas
