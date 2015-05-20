@@ -1,4 +1,5 @@
 from math import sin, cos, radians
+import random
 
 class Room:
     def __init__(self, length, width):
@@ -45,10 +46,13 @@ class Roomba:
         x_move = sin(radians(self.angle)) * self.speed
         y_move = cos(radians(self.angle)) * self.speed
         return (self.x + x_move, self.y + y_move)
+    
+    def turn(self, angle):
+        self.angle += angle
+        self.angle %= 360        
 
     def collide(self):
-        self.angle += 45
-        self.angle %= 360
+        self.turn(random.randint(45, 315))
 
     def move(self):
         self.position = self.next_position
@@ -73,13 +77,10 @@ class Simulation:
         """
         for roomba in self.roombas:
             i = 0
-            while not self.room.in_bounds(*roomba.next_position):
+            if not self.room.in_bounds(*roomba.next_position):
                 roomba.collide()
-                i += 1
-                if i > 360:
-                    raise Exception("Stuck roomba!")
-
-            roomba.move()
+            else:
+                roomba.move()
             self.room.clean(*roomba.position)
         self.steps += 1
 
